@@ -4,7 +4,7 @@ game.PlayScreen = me.ScreenObject.extend({
      */
     onResetEvent: function() {
         var backgroundImage = new me.Sprite(0, 0, {
-                image: me.loader.getImage('background'),
+                image: me.loader.getImage('bground'),
             }
         );
 

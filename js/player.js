@@ -8,8 +8,8 @@ game.Player = me.Entity.extend({
               width: 64,
               height: 64
         }]);
-        this.velx = 200;
-        this.vely = 200;
+        this.velx = 150;
+        this.vely = 150;
         this.maxX = me.game.viewport.width - this.width;
         this.maxY = me.game.viewport.height - this.height;
         var num = 0;
@@ -22,8 +22,7 @@ game.Player = me.Entity.extend({
         var angle = this.angleToPoint(pos);
         // FIXME: This is a lazy workaround for rotation.
         if (angle !== this.currentAngle) {
-            this.renderable.currentTransform.identity();
-            this.renderable.currentTransform.rotate(angle);
+            this.renderable.currentTransform.identity().rotate(angle);
             this.currentAngle = angle;
         }
 
