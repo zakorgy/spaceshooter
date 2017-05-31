@@ -4,7 +4,7 @@ game.PlayScreen = me.ScreenObject.extend({
      */
     onResetEvent: function() {
         var backgroundImage = new me.Sprite(0, 0, {
-                image: me.loader.getImage('background'),
+                image: me.loader.getImage('bground'),
             }
         );
 
@@ -34,5 +34,6 @@ game.PlayScreen = me.ScreenObject.extend({
         me.input.unbindKey(me.input.KEY.D);
         me.input.unbindKey(me.input.KEY.W);
         me.input.unbindKey(me.input.KEY.S);
+        me.input.unbindKey(me.input.KEY.SPACE);
     },
 });
