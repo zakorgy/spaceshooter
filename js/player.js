@@ -12,9 +12,9 @@ game.Player = me.Entity.extend({
         this.vely = 150;
         this.maxX = me.game.viewport.width - this.width;
         this.maxY = me.game.viewport.height - this.height;
-        var num = 0;
-        this.currentAngle = num.degToRad();
-        this.renderable.currentTransform.rotate(this.currentAngle);
+        var num = Math.PI / 2;
+        this.currentAngle = Number.prototype.degToRad(num);
+        this.renderable.currentTransform.identity().rotate(this.currentAngle);
     },
 
     update: function (time) {
@@ -25,6 +25,8 @@ game.Player = me.Entity.extend({
             this.renderable.currentTransform.identity().rotate(angle);
             this.currentAngle = angle;
         }
+
+        console.log(Number.prototype.radToDeg(this.currentAngle));
 
         this._super(me.Entity, "update", [time]);
         if (me.input.isKeyPressed("left")) {
@@ -45,6 +47,15 @@ game.Player = me.Entity.extend({
 
         this.pos.x = this.pos.x.clamp(0, this.maxX);
         this.pos.y = this.pos.y.clamp(0, this.maxY);
+        if (mouseClicked) {
+            me.game.world.addChild(me.pool.pull("projectile", this.pos.x, this.pos.y, this.currentAngle));
+            mouseClicked = false;
+            this.velx = 0;
+            this.vely = 0;
+        } else {
+            this.velx = 150;
+            this.vely = 150; 
+        }
         return true;
     },
 });

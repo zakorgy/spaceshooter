@@ -15,7 +15,7 @@
     </head>
     <body>
         <!-- Canvas placeholder -->
-        <div id="screen" onmousemove="getMousePos(event)"></div>
+        <div id="screen" onmousemove="getMousePos(event)" onclick="mouseClick()"></div>
 
         <!-- melonJS Library -->
         <!-- build:js js/app.min.js -->
@@ -27,9 +27,9 @@
         <!-- Game Scripts -->
         <script type="text/javascript" src="js/game.js"></script>
         <script type="text/javascript" src="js/player.js"></script>
+        <script type="text/javascript" src="js/projectile.js"></script>
         <script type="text/javascript" src="build/js/resources.js"></script>
         <script type="text/javascript" src="js/screens/play.js"></script>
-        <script type="text/javascript" src="js/screens/projectile.js"></script>
         <!-- /build -->
 
         <!-- Bootstrap -->
@@ -38,9 +38,13 @@
                 game.onload();
             });
             var mousePos = { x: 0.0, y: 0.0};
+            var mouseClicked = false;
             function getMousePos(e) {
                 mousePos.x = e.clientX;
                 mousePos.y = e.clientY;
+            }
+            function mouseClick() {
+                mouseClicked = true;
             }
         </script>
     </body>

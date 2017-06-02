@@ -34,5 +34,6 @@ game.PlayScreen = me.ScreenObject.extend({
         me.input.unbindKey(me.input.KEY.D);
         me.input.unbindKey(me.input.KEY.W);
         me.input.unbindKey(me.input.KEY.S);
+        me.input.unbindKey(me.input.KEY.SPACE);
     },
 });
