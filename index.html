@@ -15,7 +15,7 @@
     </head>
     <body>
         <!-- Canvas placeholder -->
-        <div id="screen" onmousemove="getMousePos(event)" onmousedown="mouseDown()" onmouseup="mouseUp()"></div>
+        <div id="screen" onmousemove="getMousePos(event)" onmousedown="mouseDown(event)" onmouseup="mouseUp()"></div>
 
         <!-- melonJS Library -->
         <!-- build:js js/app.min.js -->
@@ -43,8 +43,10 @@
                 mousePos.x = e.clientX;
                 mousePos.y = e.clientY;
             }
-            function mouseDown() {
-                isFiring = true;
+            function mouseDown(e) {
+                e = e || window.event;
+                var button = e.which || e.button;
+                isFiring = (button === 1);
             }
             function mouseUp() {
                 isFiring = false;
