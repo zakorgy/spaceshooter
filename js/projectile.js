@@ -1,7 +1,11 @@
 game.Projectile = me.Entity.extend({
     init : function (x, y, angle) {
-        var projectile = me.loader.getImage("shot");
-        this._super(me.Entity, "init", [x + 16, y + 16, { image: projectile, width: 32, height: 32}]);
+        var projectile = new me.Sprite(0, 0, {
+            image : "shot",
+            framewidth : 32,
+            frameheight : 32,
+        });
+        this._super(me.Entity, "init", [x + 16, y + 16, projectile]);
         this.z = 5;
         this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
         this.renderable.currentTransform.identity().rotate(angle + Number.prototype.degToRad(90));
@@ -9,6 +13,8 @@ game.Projectile = me.Entity.extend({
         this.vely = Math.sin(angle) * 300;
         this.maxX = me.game.viewport.width;
         this.maxY = me.game.viewport.height;
+        this.renderable.addAnimation("pulse",  [0, 1, 2, 3, 4, 5], 10);
+        this.renderable.setCurrentAnimation("pulse");
         this.body.setVelocity(this.velx, this.vely);
         this.alwaysUpdate = true;
     },
@@ -17,11 +23,9 @@ game.Projectile = me.Entity.extend({
         this._super(me.Entity, "update", [time]);
         this.pos.x += this.velx * time/1000;
         this.pos.y += this.vely * time/1000;
-        //this.body.pos.x += this.body.accel.x * time / 1000;
-        //this.body.pos.y += this.body.accel.y * time / 1000;
+        //this.body.vel.x += this.body.accel.x * time / 1000;
+        //this.body.vel.y += this.body.accel.y * time / 1000;
 
-        //this.body.update();
-        me.collision.check(this);
         this.pos.x = this.pos.x.clamp(-32, this.maxX);
         this.pos.y = this.pos.y.clamp(-32, this.maxY);
 
@@ -33,6 +37,8 @@ game.Projectile = me.Entity.extend({
             //console.log("removed");
         }
 
+        this.body.update();
+        me.collision.check(this);
         return true;
     },
 });
