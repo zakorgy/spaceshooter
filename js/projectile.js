@@ -9,6 +9,7 @@ game.Projectile = me.Entity.extend({
         this.z = 5;
         this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
         this.renderable.currentTransform.identity().rotate(angle + Number.prototype.degToRad(90));
+        this.renderable.scale(0.7, 1.0);
         this.velx = Math.cos(angle) * 300;
         this.vely = Math.sin(angle) * 300;
         this.maxX = me.game.viewport.width;
