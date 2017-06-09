@@ -46,13 +46,6 @@ game.Player = me.Entity.extend({
 
         this.pos.x = this.pos.x.clamp(0, this.maxX);
         this.pos.y = this.pos.y.clamp(0, this.maxY);
-        if (isFiring) {
-            this.velx = 75;
-            this.vely = 75;
-        } else {
-            this.velx = 150;
-            this.vely = 150; 
-        }
         if (isFiring && (Date.now() > this.lastTimeShot + 200)) {
             me.game.world.addChild(me.pool.pull("projectile", this.pos.x - 16 * Math.sin(this.currentAngle), this.pos.y + 16 * Math.cos(this.currentAngle), this.currentAngle));
             me.game.world.addChild(me.pool.pull("projectile", this.pos.x + 16 * Math.sin(this.currentAngle), this.pos.y - 16 * Math.cos(this.currentAngle), this.currentAngle));
