@@ -8,6 +8,8 @@ game.Projectile = me.Entity.extend({
         this._super(me.Entity, "init", [x + 16, y + 16, projectile]);
         this.z = 5;
         this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
+        this.body.addShape(new me.Ellipse(16, 16, 10, 10), true);
+        this.body.shapes.shift();
         this.renderable.currentTransform.identity().rotate(angle + Number.prototype.degToRad(90));
         this.renderable.scale(0.7, 1.0);
         this.velx = Math.cos(angle) * 300;

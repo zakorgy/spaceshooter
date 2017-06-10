@@ -5,20 +5,16 @@ game.Enemy = me.Entity.extend({
             framewidth : 78,
             frameheight : 74,
         });
-        this._super(me.Entity, "init", [x, y, enemy_sprite, 
-                                        {shapes: new me.Rect(10, 20, 68, 54)}]);
+        this._super(me.Entity, "init", [x, y, enemy_sprite]);
         this.z = 6;
+        this.body.addShape(new me.Ellipse(35, 35, 55, 40), true);
+        this.body.shapes.shift();
         this.body.collisionType = me.collision.types.ENEMY_OBJECT;
-        this.width = 39;
-        this.height = 37;
         this.renderable.addAnimation("idle", [0, 1, 2, 3, 4, 5, 6], 100);
         this.renderable.setCurrentAnimation("idle");
-        var num = Math.PI / 2;
-        this.currentAngle = Number.prototype.degToRad(-num);
+        this.currentAngle = Number.prototype.degToRad(-Math.PI / 2);
         this.renderable.currentTransform.identity().rotate(this.currentAngle);
         this.alwaysUpdate = true;
-        /*this.body.shapeType = "Ellipse";
-        this.body.addShape(new me.Ellipse(0, 0, 37, 37), false);*/
     },
 
     update: function (time) {
@@ -30,17 +26,13 @@ game.Enemy = me.Entity.extend({
 
     onCollision : function (res, other) {
         if (other.body.collisionType === me.collision.types.PROJECTILE_OBJECT) {
-            /*if (new me.Vector2d(this.pos.x - other.pos.x + 37, this.pos.y - other.pos.y + 18).length() < 35) {
-            }*/
-             me.game.world.removeChild(other);
-            //game.playScreen.enemyManager.removeChild(other);
+            me.game.world.removeChild(other);
             return false;
         }
         if (other.body.collisionType === me.collision.types.PLAYER_OBJECT) {
-            /*if (new me.Vector2d(this.pos.x - other.pos.x + 37, this.pos.y - other.pos.y + 18).length() < 35) {
-            }*/
             //game.playScreen.enemyManager.removeChild(other);
             return false;
         }
+        return true;
     }
 });

@@ -6,8 +6,10 @@ game.Player = me.Entity.extend({
             me.game.viewport.height / 2 - image.height - 20,
             { image : image,
               width: 64,
-              height: 64
-        }]);
+              height: 64,
+              shapes: [ new me.Ellipse(32, 32, 40, 40) ]
+            },
+        ]);
         this.body.collisionType = me.collision.types.PLAYER_OBJECT;
         this.velx = 150;
         this.vely = 150;
@@ -24,7 +26,7 @@ game.Player = me.Entity.extend({
         var angle = this.angleToPoint(pos);
         // FIXME: This is a lazy workaround for rotation.
         if (angle !== this.currentAngle) {
-            this.renderable.currentTransform.identity().rotate(angle);
+            this.renderable.currentTransform.identity().rotate(angle) * time / 1000;
             this.currentAngle = angle;
         }
 
