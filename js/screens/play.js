@@ -15,7 +15,21 @@ game.PlayScreen = me.ScreenObject.extend({
         me.game.world.addChild(backgroundImage, 1);
         var player = me.game.world.addChild(me.pool.pull("player"));
         // This is only for test purposes, this should be placed in a different place.
-        me.game.world.addChild(me.pool.pull("enemy", me.game.viewport.width / 2, me.game.viewport.height / 2, player));
+        me.game.world.addChild(me.pool.pull("enemy", 600, 600, player));
+        me.game.world.addChild(me.pool.pull("enemy", 700, 600, player));
+        me.game.world.addChild(me.pool.pull("enemy", 800, 600, player));
+        me.game.world.addChild(me.pool.pull("enemy", 600, 700, player));
+        me.game.world.addChild(me.pool.pull("enemy", 700, 700, player));
+        me.game.world.addChild(me.pool.pull("enemy", 800, 700, player));
+        me.game.world.addChild(me.pool.pull("enemy", 600, 800, player));
+        me.game.world.addChild(me.pool.pull("enemy", 700, 800, player));
+        me.game.world.addChild(me.pool.pull("enemy", 800, 800, player));
+        me.game.world.addChild(me.pool.pull("enemy", 600, 900, player));
+        me.game.world.addChild(me.pool.pull("enemy", 700, 900, player));
+        me.game.world.addChild(me.pool.pull("enemy", 800, 900, player));
+        me.game.world.addChild(me.pool.pull("enemy", 600, 1000, player));
+        me.game.world.addChild(me.pool.pull("enemy", 700, 1000, player));
+        me.game.world.addChild(me.pool.pull("enemy", 800, 1000, player));
 
         me.input.bindKey(me.input.KEY.LEFT, "left");
         me.input.bindKey(me.input.KEY.RIGHT, "right");

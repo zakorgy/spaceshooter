@@ -16,21 +16,33 @@ game.Enemy = me.Entity.extend({
         this.renderable.currentTransform.identity().rotate(this.currentAngle);
         this.alwaysUpdate = true;
         this.target = targetedPlayer;
-        this.velX = 0;
-        this.velY = 0;
+        this.velx = 0;
+        this.vely = 0;
+        //this.body.setVelocity(this.velx, this.vely);
         this.isTargetReached = false;
+        this.lastCollidedEnemy = null;
+        this.life = 10;
     },
 
     update: function (time) {
-        if (this.distanceTo(this.target) > 100) {
+        if (this.life <= 0) {
+            me.game.world.removeChild(this);
+        }
+        if (this.distanceTo(this.target) > 200) {
             this.isTargetReached = false;
+        }
+
+        if (this.lastCollidedEnemy) {
+            if ((this.distanceTo(this.lastCollidedEnemy) > 100 || !this.lastCollidedEnemy.lastCollidedEnemy)) {
+                this.lastCollidedEnemy = null;
+            }
         }
         var angle = this.angleTo(this.target);
         if (this.currentAngle !== angle) {
             this.currentAngle = angle;
             this.renderable.currentTransform.identity().rotate(angle + Math.PI * 1.5) * time / 1000;
         }
-        if (!this.isTargetReached) {
+        if (!this.isTargetReached && !this.lastCollidedEnemy) {
             this.velx = Math.cos(this.currentAngle) * 100;
             this.vely = Math.sin(this.currentAngle) * 100;
         } else {
@@ -49,12 +61,25 @@ game.Enemy = me.Entity.extend({
 
     onCollision : function (res, other) {
         if (other.body.collisionType === me.collision.types.PROJECTILE_OBJECT) {
+            this.life -= other.damage;
             me.game.world.removeChild(other);
             return false;
         }
-        if (other.body.collisionType === me.collision.types.PLAYER_OBJECT) {
-            //game.playScreen.enemyManager.removeChild(other);
+        if (res.b.body.collisionType === me.collision.types.PLAYER_OBJECT) {
+            // makes the other entity solid, by substracting the overlap vector to the current position
             this.isTargetReached = true;
+            this.pos.sub(res.overlapV);
+            console.log("Hurt");
+            // not solid
+            return false;
+        }
+        if (res.b.body.collisionType === me.collision.types.ENEMY_OBJECT) {
+            // makes the other entity solid, by substracting the overlap vector to the current position
+            if ((res.b.distanceTo(this.target) < this.distanceTo(this.target)) &&!other.lastCollidedEnemy) {
+                this.lastCollidedEnemy = other;
+            }
+            //this.pos.sub(res.overlapV);
+            // not solid
             return false;
         }
         return false;
