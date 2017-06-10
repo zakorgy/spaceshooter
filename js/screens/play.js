@@ -13,9 +13,9 @@ game.PlayScreen = me.ScreenObject.extend({
         backgroundImage.scale(me.game.viewport.width / backgroundImage.width, me.game.viewport.height / backgroundImage.height);
 
         me.game.world.addChild(backgroundImage, 1);
-        me.game.world.addChild(me.pool.pull("player"));
+        var player = me.game.world.addChild(me.pool.pull("player"));
         // This is only for test purposes, this should be placed in a different place.
-        me.game.world.addChild(me.pool.pull("enemy", me.game.viewport.width / 2, me.game.viewport.height / 2));
+        me.game.world.addChild(me.pool.pull("enemy", me.game.viewport.width / 2, me.game.viewport.height / 2, player));
 
         me.input.bindKey(me.input.KEY.LEFT, "left");
         me.input.bindKey(me.input.KEY.RIGHT, "right");
