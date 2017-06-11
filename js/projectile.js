@@ -12,8 +12,8 @@ game.Projectile = me.Entity.extend({
         this.body.shapes.shift();
         this.renderable.currentTransform.identity().rotate(angle + Number.prototype.degToRad(90));
         this.renderable.scale(0.7, 1.0);
-        this.velx = Math.cos(angle) * 300;
-        this.vely = Math.sin(angle) * 300;
+        this.velx = Math.cos(angle) * 600;
+        this.vely = Math.sin(angle) * 600;
         this.maxX = me.game.viewport.width;
         this.maxY = me.game.viewport.height;
         this.renderable.addAnimation("pulse",  [0, 1, 2, 3, 4, 5], 10);

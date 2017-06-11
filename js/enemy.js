@@ -22,22 +22,22 @@ game.Enemy = me.Entity.extend({
         this.isTargetReached = false;
         this.lastCollidedEnemy = null;
         this.life = 10;
-        this.angleModifier = 1 + (-10).random(10) / 25;
+        this.angleModifier = (-150).random(150);
     },
 
     update: function (time) {
         if (this.life <= 0) {
-            if (maxEnemyCount  < 100) {
+            if (maxEnemyCount  < 70) {
                 me.game.world.addChild(me.pool.pull("enemy",
-                                                   (this.pos.x - 30).random(this.pos.x + 30),
-                                                   (this.pos.y - 30).random(this.pos.y + 30),
+                                                    me.game.viewport.width + 40,
+                                                   (- 40).random(me.game.viewport.height + 40),
                                                    this.target));
 
                 maxEnemyCount++;
 
                 me.game.world.addChild(me.pool.pull("enemy",
-                                                   (this.pos.x - 30).random(this.pos.x + 30),
-                                                   (this.pos.y - 30).random(this.pos.y + 30),
+                                                    -40,
+                                                   (- 40).random(me.game.viewport.height + 40),
                                                    this.target));
                 maxEnemyCount++;
             }
@@ -46,12 +46,12 @@ game.Enemy = me.Entity.extend({
             me.game.world.addChild(me.pool.pull("enemyExplode", this.pos.x, this.pos.y));
         }
 
-        if (this.distanceTo(this.target) > 200) {
+        if (this.distanceTo(this.target) > 150) {
             //this.isTargetReached = false;
-            if (this.angleModifier === 1)
-                this.angleModifier = 1 + (-10).random(10) / 25;
+            if (this.angleModifier === 0)
+                this.angleModifier = (-150).random(150);
         } else {
-            this.angleModifier = 1;
+            this.angleModifier = 0;
         }
 
         if (this.distanceTo(this.target) > 0) {
@@ -64,9 +64,9 @@ game.Enemy = me.Entity.extend({
             }
         }
 
-        var angle = this.angleTo(this.target);
-        if (this.currentAngle !== angle * this.angleModifier) {
-            this.currentAngle = angle * this.angleModifier;
+        var angle = this.angleToPoint(new me.Vector2d(this.target.pos.x + this.angleModifier, this.target.pos.y + this.angleModifier));
+        if (this.currentAngle !== angle) {
+            this.currentAngle = angle;
             this.renderable.currentTransform.identity().rotate(this.currentAngle + Math.PI * 1.5);
         }
 
@@ -96,7 +96,7 @@ game.Enemy = me.Entity.extend({
         if (res.b.body.collisionType === me.collision.types.PLAYER_OBJECT && res.bInA) {
             // makes the other entity solid, by substracting the overlap vector to the current position
             this.isTargetReached = true;
-            this.angleModifier = 1;
+            this.angleModifier = 0;
             //this.pos.sub(res.overlapV);
             // not solid
             return false;

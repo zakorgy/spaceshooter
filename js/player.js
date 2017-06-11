@@ -27,7 +27,7 @@ game.Player = me.Entity.extend({
         var angle = this.angleToPoint(pos);
         // FIXME: This is a lazy workaround for rotation.
         if (angle !== this.currentAngle) {
-            this.renderable.currentTransform.identity().rotate(angle) * time / 1000;
+            this.renderable.currentTransform.identity().rotate(angle);
             this.currentAngle = angle;
         }
 
@@ -50,7 +50,7 @@ game.Player = me.Entity.extend({
 
         this.pos.x = this.pos.x.clamp(0, this.maxX);
         this.pos.y = this.pos.y.clamp(0, this.maxY);
-        if (isFiring && (Date.now() > this.lastTimeShot + 200)) {
+        if (isFiring && (Date.now() > this.lastTimeShot + 100)) {
             me.game.world.addChild(me.pool.pull("projectile", this.pos.x - 16 * Math.sin(this.currentAngle), this.pos.y + 16 * Math.cos(this.currentAngle), this.currentAngle));
             me.game.world.addChild(me.pool.pull("projectile", this.pos.x + 16 * Math.sin(this.currentAngle), this.pos.y - 16 * Math.cos(this.currentAngle), this.currentAngle));
             this.lastTimeShot = Date.now();
