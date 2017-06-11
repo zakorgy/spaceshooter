@@ -11,6 +11,7 @@ game.Player = me.Entity.extend({
             },
         ]);
         this.body.collisionType = me.collision.types.PLAYER_OBJECT;
+        this.z = 5;
         this.velx = 150;
         this.vely = 150;
         this.maxX = me.game.viewport.width - this.width;

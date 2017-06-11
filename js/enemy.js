@@ -22,7 +22,7 @@ game.Enemy = me.Entity.extend({
         this.isTargetReached = false;
         this.lastCollidedEnemy = null;
         this.life = 10;
-        this.angleModifier = (-10).random(10) / 10;
+        this.angleModifier = 1 + (-10).random(10) / 25;
     },
 
     update: function (time) {
@@ -41,16 +41,17 @@ game.Enemy = me.Entity.extend({
                                                    this.target));
                 maxEnemyCount++;
             }
-            me.game.world.removeChild(this);
             this.alive = false;
+            me.game.world.removeChild(this);
+            me.game.world.addChild(me.pool.pull("enemyExplode", this.pos.x, this.pos.y));
         }
 
-        if (this.distanceTo(this.target) > 150) {
+        if (this.distanceTo(this.target) > 200) {
             //this.isTargetReached = false;
-            if (this.angleModifier === 0)
-                this.angleModifier = (-10).random(10) / 10;
+            if (this.angleModifier === 1)
+                this.angleModifier = 1 + (-10).random(10) / 25;
         } else {
-            this.angleModifier = 0;
+            this.angleModifier = 1;
         }
 
         if (this.distanceTo(this.target) > 0) {
@@ -64,8 +65,8 @@ game.Enemy = me.Entity.extend({
         }
 
         var angle = this.angleTo(this.target);
-        if (this.currentAngle !== angle + this.angleModifier) {
-            this.currentAngle = angle + this.angleModifier;
+        if (this.currentAngle !== angle * this.angleModifier) {
+            this.currentAngle = angle * this.angleModifier;
             this.renderable.currentTransform.identity().rotate(this.currentAngle + Math.PI * 1.5);
         }
 
@@ -95,7 +96,7 @@ game.Enemy = me.Entity.extend({
         if (res.b.body.collisionType === me.collision.types.PLAYER_OBJECT && res.bInA) {
             // makes the other entity solid, by substracting the overlap vector to the current position
             this.isTargetReached = true;
-            this.angleModifier = 0;
+            this.angleModifier = 1;
             //this.pos.sub(res.overlapV);
             // not solid
             return false;
@@ -104,7 +105,7 @@ game.Enemy = me.Entity.extend({
             // makes the other entity solid, by substracting the overlap vector to the current position
             if ((res.b.distanceTo(this.target) <= this.distanceTo(this.target))) {
                 this.lastCollidedEnemy = other;
-                this.pos.add(res.overlapV.div(50));
+                this.pos.add(res.overlapV.div(40));
             }
             if (other.isTargetReached) {
                 this.lastCollidedEnemy = null;

@@ -20,7 +20,7 @@ game.Projectile = me.Entity.extend({
         this.renderable.setCurrentAnimation("pulse");
         //this.body.setVelocity(this.velx, this.vely);
         this.alwaysUpdate = true;
-        this.damage = 5;
+        this.damage = 3;
     },
 
     update: function (time) {
