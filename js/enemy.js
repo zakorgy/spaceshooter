@@ -42,12 +42,19 @@ game.Enemy = me.Entity.extend({
                 maxEnemyCount++;
             }
             me.game.world.removeChild(this);
+            this.alive = false;
         }
 
-        if (this.distanceTo(this.target) > 100) {
-            this.isTargetReached = false;
+        if (this.distanceTo(this.target) > 150) {
+            //this.isTargetReached = false;
             if (this.angleModifier === 0)
                 this.angleModifier = (-10).random(10) / 10;
+        } else {
+            this.angleModifier = 0;
+        }
+
+        if (this.distanceTo(this.target) > 0) {
+            this.isTargetReached = false;
         }
 
         if (this.lastCollidedEnemy) {
@@ -57,9 +64,9 @@ game.Enemy = me.Entity.extend({
         }
 
         var angle = this.angleTo(this.target);
-        if (this.currentAngle !== angle) {
+        if (this.currentAngle !== angle + this.angleModifier) {
             this.currentAngle = angle + this.angleModifier;
-            this.renderable.currentTransform.identity().rotate(angle + Math.PI * 1.5);
+            this.renderable.currentTransform.identity().rotate(this.currentAngle + Math.PI * 1.5);
         }
 
         if (!this.isTargetReached && !this.lastCollidedEnemy) {
@@ -89,16 +96,19 @@ game.Enemy = me.Entity.extend({
             // makes the other entity solid, by substracting the overlap vector to the current position
             this.isTargetReached = true;
             this.angleModifier = 0;
-            this.pos.sub(res.overlapV);
+            //this.pos.sub(res.overlapV);
             // not solid
             return false;
         }
         if (res.b.body.collisionType === me.collision.types.ENEMY_OBJECT) {
             // makes the other entity solid, by substracting the overlap vector to the current position
-            if ((res.b.distanceTo(this.target) < this.distanceTo(this.target)) &&!other.lastCollidedEnemy) {
+            if ((res.b.distanceTo(this.target) <= this.distanceTo(this.target))) {
                 this.lastCollidedEnemy = other;
+                this.pos.add(res.overlapV.div(50));
             }
-            //this.pos.sub(res.overlapV);
+            if (other.isTargetReached) {
+                this.lastCollidedEnemy = null;
+            }
             // not solid
             return false;
         }
