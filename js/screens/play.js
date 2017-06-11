@@ -2,9 +2,10 @@ game.PlayScreen = me.ScreenObject.extend({
     /**
      *  action to perform on state change
      */
+
     onResetEvent: function() {
         var backgroundImage = new me.Sprite(0, 0, {
-                image: me.loader.getImage('bground'),
+                image: me.loader.getImage('bground')
             }
         );
 
@@ -15,21 +16,9 @@ game.PlayScreen = me.ScreenObject.extend({
         me.game.world.addChild(backgroundImage, 1);
         var player = me.game.world.addChild(me.pool.pull("player"));
         // This is only for test purposes, this should be placed in a different place.
-        me.game.world.addChild(me.pool.pull("enemy", 600, 600, player));
-        me.game.world.addChild(me.pool.pull("enemy", 700, 600, player));
-        me.game.world.addChild(me.pool.pull("enemy", 800, 600, player));
-        me.game.world.addChild(me.pool.pull("enemy", 600, 700, player));
-        me.game.world.addChild(me.pool.pull("enemy", 700, 700, player));
-        me.game.world.addChild(me.pool.pull("enemy", 800, 700, player));
-        me.game.world.addChild(me.pool.pull("enemy", 600, 800, player));
-        me.game.world.addChild(me.pool.pull("enemy", 700, 800, player));
-        me.game.world.addChild(me.pool.pull("enemy", 800, 800, player));
-        me.game.world.addChild(me.pool.pull("enemy", 600, 900, player));
-        me.game.world.addChild(me.pool.pull("enemy", 700, 900, player));
-        me.game.world.addChild(me.pool.pull("enemy", 800, 900, player));
-        me.game.world.addChild(me.pool.pull("enemy", 600, 1000, player));
-        me.game.world.addChild(me.pool.pull("enemy", 700, 1000, player));
-        me.game.world.addChild(me.pool.pull("enemy", 800, 1000, player));
+        //noinspection JSCheckFunctionSignatures
+        me.game.world.addChild(me.pool.pull("enemy", (100).random(800), (100).random(800), player));
+        maxEnemyCount  = 1;
 
         me.input.bindKey(me.input.KEY.LEFT, "left");
         me.input.bindKey(me.input.KEY.RIGHT, "right");
@@ -51,5 +40,5 @@ game.PlayScreen = me.ScreenObject.extend({
         me.input.unbindKey(me.input.KEY.W);
         me.input.unbindKey(me.input.KEY.S);
         me.input.unbindKey(me.input.KEY.SPACE);
-    },
+    }
 });

@@ -3,7 +3,7 @@ game.Enemy = me.Entity.extend({
         var enemy_sprite = new me.Sprite(0, 0, {
             image : "enemy_idle",
             framewidth : 73,
-            frameheight : 74,
+            frameheight : 74
         });
         this._super(me.Entity, "init", [x, y, enemy_sprite]);
         this.z = 6;
@@ -22,32 +22,52 @@ game.Enemy = me.Entity.extend({
         this.isTargetReached = false;
         this.lastCollidedEnemy = null;
         this.life = 10;
+        this.angleModifier = (-10).random(10) / 10;
     },
 
     update: function (time) {
         if (this.life <= 0) {
+            if (maxEnemyCount  < 100) {
+                me.game.world.addChild(me.pool.pull("enemy",
+                                                   (this.pos.x - 30).random(this.pos.x + 30),
+                                                   (this.pos.y - 30).random(this.pos.y + 30),
+                                                   this.target));
+
+                maxEnemyCount++;
+
+                me.game.world.addChild(me.pool.pull("enemy",
+                                                   (this.pos.x - 30).random(this.pos.x + 30),
+                                                   (this.pos.y - 30).random(this.pos.y + 30),
+                                                   this.target));
+                maxEnemyCount++;
+            }
             me.game.world.removeChild(this);
         }
-        if (this.distanceTo(this.target) > 200) {
+
+        if (this.distanceTo(this.target) > 100) {
             this.isTargetReached = false;
+            if (this.angleModifier === 0)
+                this.angleModifier = (-10).random(10) / 10;
         }
 
         if (this.lastCollidedEnemy) {
-            if ((this.distanceTo(this.lastCollidedEnemy) > 100 || !this.lastCollidedEnemy.lastCollidedEnemy)) {
+            if ((this.distanceTo(this.lastCollidedEnemy) > 50 || !this.lastCollidedEnemy.alive || this.lastCollidedEnemy.lastCollidedEnemy)) {
                 this.lastCollidedEnemy = null;
             }
         }
+
         var angle = this.angleTo(this.target);
         if (this.currentAngle !== angle) {
-            this.currentAngle = angle;
-            this.renderable.currentTransform.identity().rotate(angle + Math.PI * 1.5) * time / 1000;
+            this.currentAngle = angle + this.angleModifier;
+            this.renderable.currentTransform.identity().rotate(angle + Math.PI * 1.5);
         }
+
         if (!this.isTargetReached && !this.lastCollidedEnemy) {
-            this.velx = Math.cos(this.currentAngle) * 100;
-            this.vely = Math.sin(this.currentAngle) * 100;
+            this.velx = Math.cos(this.currentAngle) * (100).random(160);
+            this.vely = Math.sin(this.currentAngle) * (100).random(160);
         } else {
-            this.velx = Math.cos(this.currentAngle) * 10;
-            this.vely = Math.sin(this.currentAngle) * 10;
+            this.velx = 0;
+            this.vely = 0;
         }
         //this.body.setVelocity(this.velx, this.vely);
         this.pos.x += this.velx * time/1000;
@@ -65,11 +85,11 @@ game.Enemy = me.Entity.extend({
             me.game.world.removeChild(other);
             return false;
         }
-        if (res.b.body.collisionType === me.collision.types.PLAYER_OBJECT) {
+        if (res.b.body.collisionType === me.collision.types.PLAYER_OBJECT && res.bInA) {
             // makes the other entity solid, by substracting the overlap vector to the current position
             this.isTargetReached = true;
+            this.angleModifier = 0;
             this.pos.sub(res.overlapV);
-            console.log("Hurt");
             // not solid
             return false;
         }
@@ -83,5 +103,5 @@ game.Enemy = me.Entity.extend({
             return false;
         }
         return false;
-    },
+    }
 });

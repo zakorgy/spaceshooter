@@ -3,7 +3,7 @@ game.Projectile = me.Entity.extend({
         var projectile = new me.Sprite(0, 0, {
             image : "shot",
             framewidth : 32,
-            frameheight : 32,
+            frameheight : 32
         });
         this._super(me.Entity, "init", [x + 16, y + 16, projectile]);
         this.z = 5;
@@ -18,9 +18,9 @@ game.Projectile = me.Entity.extend({
         this.maxY = me.game.viewport.height;
         this.renderable.addAnimation("pulse",  [0, 1, 2, 3, 4, 5], 10);
         this.renderable.setCurrentAnimation("pulse");
-        this.body.setVelocity(this.velx, this.vely);
+        //this.body.setVelocity(this.velx, this.vely);
         this.alwaysUpdate = true;
-        this.damage = 1;
+        this.damage = 5;
     },
 
     update: function (time) {
@@ -44,5 +44,5 @@ game.Projectile = me.Entity.extend({
         this.body.update();
         me.collision.check(this);
         return true;
-    },
+    }
 });
