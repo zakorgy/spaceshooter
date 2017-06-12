@@ -27,23 +27,7 @@ game.Enemy = me.Entity.extend({
 
     update: function (time) {
         if (this.life <= 0) {
-            if (maxEnemyCount  < 70) {
-                me.game.world.addChild(me.pool.pull("enemy",
-                                                    me.game.viewport.width + 40,
-                                                   (- 40).random(me.game.viewport.height + 40),
-                                                   this.target));
-
-                maxEnemyCount++;
-
-                me.game.world.addChild(me.pool.pull("enemy",
-                                                    -40,
-                                                   (- 40).random(me.game.viewport.height + 40),
-                                                   this.target));
-                maxEnemyCount++;
-            }
-            this.alive = false;
             me.game.world.removeChild(this);
-            me.game.world.addChild(me.pool.pull("enemyExplode", this.pos.x, this.pos.y));
         }
 
         if (this.distanceTo(this.target) > 150) {
@@ -114,5 +98,25 @@ game.Enemy = me.Entity.extend({
             return false;
         }
         return false;
+    },
+
+    onDeactivateEvent: function() {
+        if (maxEnemyCount  < 200) {
+            me.game.world.addChild(me.pool.pull("enemy",
+                                                me.game.viewport.width + 40,
+                                               (- 40).random(me.game.viewport.height + 40),
+                                               this.target));
+
+            maxEnemyCount++;
+
+            me.game.world.addChild(me.pool.pull("enemy",
+                                                -40,
+                                               (- 40).random(me.game.viewport.height + 40),
+                                               this.target));
+            maxEnemyCount++;
+
+        }
+        this.alive = false;
+        me.game.world.addChild(me.pool.pull("enemyExplode", this.pos.x, this.pos.y));
     }
 });
