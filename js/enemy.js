@@ -48,7 +48,10 @@ game.Enemy = me.Entity.extend({
             }
         }
 
-        var angle = this.angleToPoint(new me.Vector2d(this.target.pos.x + this.angleModifier, this.target.pos.y + this.angleModifier));
+        var angle = this.angleToPoint(new me.Vector2d(
+                        this.target.pos.x + this.angleModifier + this.target.width / 2,
+                        this.target.pos.y + this.angleModifier + this.target.height / 2));
+
         if (this.currentAngle !== angle) {
             this.currentAngle = angle;
             this.renderable.currentTransform.identity().rotate(this.currentAngle + Math.PI * 1.5);
@@ -101,7 +104,7 @@ game.Enemy = me.Entity.extend({
     },
 
     onDeactivateEvent: function() {
-        if (maxEnemyCount  < 200) {
+        if (maxEnemyCount  < 100) {
             me.game.world.addChild(me.pool.pull("enemy",
                                                 me.game.viewport.width + 40,
                                                (- 40).random(me.game.viewport.height + 40),
