@@ -1,22 +1,22 @@
 game.Projectile = me.Entity.extend({
     init : function (x, y, angle) {
         var projectile = new me.Sprite(0, 0, {
-            image : "shot",
+            image : "shot_2",
             framewidth : 32,
             frameheight : 32
         });
         this._super(me.Entity, "init", [x + 16, y + 16, projectile]);
         this.z = 5;
         this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
-        this.body.addShape(new me.Ellipse(16, 16, 10, 10), true);
+        this.body.addShape(new me.Ellipse(16, 16,4, 4), true);
         this.body.shapes.shift();
         this.renderable.currentTransform.identity().rotate(angle + Number.prototype.degToRad(90));
-        this.renderable.scale(0.7, 1.0);
-        this.velx = Math.cos(angle) * 600;
-        this.vely = Math.sin(angle) * 600;
+        this.renderable.scale(0.75, 0.75);
+        this.velx = Math.cos(angle) * 1000;
+        this.vely = Math.sin(angle) * 1000;
         this.maxX = me.game.viewport.width;
         this.maxY = me.game.viewport.height;
-        this.renderable.addAnimation("pulse",  [0, 1, 2, 3, 4, 5], 10);
+        this.renderable.addAnimation("pulse",  [0, 1, 2, 3, 4, 5], 30);
         this.renderable.setCurrentAnimation("pulse");
         //this.body.setVelocity(this.velx, this.vely);
         this.alwaysUpdate = true;

@@ -1,16 +1,17 @@
 game.Player = me.Entity.extend({
     init : function (x, y) {
-        var image = me.loader.getImage("player");
+        var image = me.loader.getImage("player_2");
         this._super(me.Entity, "init", [
             me.game.viewport.width / 2 - image.width / 2,
             me.game.viewport.height / 2 - image.height - 20,
             { image : image,
               width: 64,
               height: 64,
-              shapes: [ new me.Ellipse(32, 32, 40, 40) ]
+              shapes: [ new me.Ellipse(32, 32, 30, 30) ]
             },
         ]);
         this.body.collisionType = me.collision.types.PLAYER_OBJECT;
+        this.renderable.scale(0.75, 0.75);
         this.z = 5;
         this.velx = 150;
         this.vely = 150;
@@ -27,7 +28,8 @@ game.Player = me.Entity.extend({
         var angle = this.angleToPoint(pos);
         // FIXME: This is a lazy workaround for rotation.
         if (angle !== this.currentAngle) {
-            this.renderable.currentTransform.identity().rotate(angle);
+            this.renderable.currentTransform.identity().rotate(angle + Math.PI/ 2);
+            this.renderable.scale(0.75, 0.75);
             this.currentAngle = angle;
         }
 
@@ -50,10 +52,18 @@ game.Player = me.Entity.extend({
 
         this.pos.x = this.pos.x.clamp(0, this.maxX);
         this.pos.y = this.pos.y.clamp(0, this.maxY);
-        if (isFiring && (Date.now() > this.lastTimeShot + 100)) {
-            me.game.world.addChild(me.pool.pull("projectile", this.pos.x - 16 * Math.sin(this.currentAngle), this.pos.y + 16 * Math.cos(this.currentAngle), this.currentAngle));
-            me.game.world.addChild(me.pool.pull("projectile", this.pos.x + 16 * Math.sin(this.currentAngle), this.pos.y - 16 * Math.cos(this.currentAngle), this.currentAngle));
+        if (isFiring && (Date.now() > this.lastTimeShot + 150)) {
+            me.game.world.addChild(me.pool.pull("projectile", this.pos.x - 12 * Math.sin(this.currentAngle), this.pos.y + 12 * Math.cos(this.currentAngle), this.currentAngle));
+            me.game.world.addChild(me.pool.pull("projectile", this.pos.x + 12 * Math.sin(this.currentAngle), this.pos.y - 12 * Math.cos(this.currentAngle), this.currentAngle));
             this.lastTimeShot = Date.now();
+        }
+
+        if (isFiring) {
+            this.velx = 75;
+            this.vely = 75;
+        } else {
+            this.velx = 150;
+            this.vely = 150;
         }
         return true;
     },

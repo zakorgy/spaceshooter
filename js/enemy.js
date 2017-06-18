@@ -1,19 +1,19 @@
 game.Enemy = me.Entity.extend({
     init : function (x, y, targetedPlayer) {
         var enemy_sprite = new me.Sprite(0, 0, {
-            image : "enemy_idle",
-            framewidth : 73,
-            frameheight : 74
+            image : "new_enemy",
+            framewidth : 48,
+            frameheight : 48
         });
         this._super(me.Entity, "init", [x, y, enemy_sprite]);
         this.z = 6;
-        this.body.addShape(new me.Ellipse(36.5, 37, 50, 50), true);
+        this.body.addShape(new me.Ellipse(24, 24, 33, 33), true);
         this.body.shapes.shift();
         this.body.collisionType = me.collision.types.ENEMY_OBJECT;
-        this.renderable.addAnimation("idle", [0, 1, 2, 3, 4, 5, 6], 100);
+        this.renderable.scale(1.2, 1.2);
+        this.renderable.addAnimation("idle", [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5], 332);
         this.renderable.setCurrentAnimation("idle");
         this.currentAngle = Number.prototype.degToRad(0);
-        this.renderable.currentTransform.identity().rotate(this.currentAngle);
         this.alwaysUpdate = true;
         this.target = targetedPlayer;
         this.velx = 0;
@@ -30,7 +30,7 @@ game.Enemy = me.Entity.extend({
             me.game.world.removeChild(this);
         }
 
-        if (this.distanceTo(this.target) > 150) {
+        if (this.distanceTo(this.target) > 200) {
             //this.isTargetReached = false;
             if (this.angleModifier === 0)
                 this.angleModifier = (-150).random(150);
@@ -54,12 +54,12 @@ game.Enemy = me.Entity.extend({
 
         if (this.currentAngle !== angle) {
             this.currentAngle = angle;
-            this.renderable.currentTransform.identity().rotate(this.currentAngle + Math.PI * 1.5);
+            //this.renderable.currentTransform.identity().rotate(this.currentAngle + Math.PI * 1.5);
         }
 
         if (!this.isTargetReached && !this.lastCollidedEnemy) {
-            this.velx = Math.cos(this.currentAngle) * (100).random(160);
-            this.vely = Math.sin(this.currentAngle) * (100).random(160);
+            this.velx = Math.cos(this.currentAngle) * (50).random(160);
+            this.vely = Math.sin(this.currentAngle) * (50).random(160);
         } else {
             this.velx = 0;
             this.vely = 0;
@@ -67,7 +67,7 @@ game.Enemy = me.Entity.extend({
         //this.body.setVelocity(this.velx, this.vely);
         this.pos.x += this.velx * time/1000;
         this.pos.y += this.vely * time/1000;
-
+        this.renderable.currentTransform.rotate(Math.PI * time / 1000);
         this._super(me.Entity, "update", [time]);
         this.body.update();
         me.collision.check(this);
@@ -120,6 +120,6 @@ game.Enemy = me.Entity.extend({
 
         }
         this.alive = false;
-        me.game.world.addChild(me.pool.pull("enemyExplode", this.pos.x, this.pos.y));
+        //me.game.world.addChild(me.pool.pull("enemyExplode", this.pos.x, this.pos.y));
     }
 });
