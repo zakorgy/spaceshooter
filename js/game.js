@@ -33,6 +33,7 @@ var game = {
     loaded : function () {
         me.pool.register("player", game.Player);
         me.pool.register("projectile", game.Projectile);
+        me.pool.register("laser", game.Laser);
         me.pool.register("enemy", game.Enemy);
         me.pool.register("enemyExplode", game.EnemyExplode);
         // set the "Play/Ingame" Screen Object
