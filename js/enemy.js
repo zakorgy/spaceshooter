@@ -23,9 +23,11 @@ game.Enemy = me.Entity.extend({
         this.lastCollidedEnemy = null;
         this.life = 10;
         this.angleModifier = (-150).random(150);
+        this.damageOverTime = 0;
     },
 
     update: function (time) {
+        this.life -= this.damageOverTime * time/1000;
         if (this.life <= 0) {
             me.game.world.removeChild(this);
         }
@@ -75,6 +77,13 @@ game.Enemy = me.Entity.extend({
     },
 
     onCollision : function (res, other) {
+        if (other.body.collisionType === game.collisionTypes.LASER) {
+            console.log("LASER hit")
+            this.damageOverTime = other.damage;
+            return false;
+        } else {
+            this.damageOverTime = 0;
+        }
         if (other.body.collisionType === me.collision.types.PROJECTILE_OBJECT) {
             this.life -= other.damage;
             me.game.world.removeChild(other);

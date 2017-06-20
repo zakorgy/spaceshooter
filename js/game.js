@@ -1,6 +1,9 @@
 
 /* Game namespace */
 var game = {
+    collisionTypes: {
+        LASER : me.collision.types.USER << 0,
+    },
     // Run on page load.
     onload : function () {
         // Initialize the video.

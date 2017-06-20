@@ -1,27 +1,29 @@
 game.Laser = me.Entity.extend({
     init : function (x, y, angle) {
-        var projectile = new me.Sprite(0, 0, {
-            image : "shot_2",
-            framewidth : 32,
-            frameheight : 32
-        });
-        this._super(me.Entity, "init", [x, y, projectile]);
+        this._super(me.Entity, "init", [x, y, {width: 6, height: (me.game.viewport.width * 1.5)}]);
         this.z = 5;
-        this.body.collisionType = me.collision.types.PROJECTILE_OBJECT;
-        //this.body.addShape(new me.Line(x, y, [new me.Vector2d(x, y), new me.Vector2d((me.game.viewport.width - x) * Math.cos(angle), (me.game.viewport.height - y) * Math.sin(angle))], true));
-        this.body.addShape(new me.Line(x, y, [new me.Vector2d(x, y), me.input.globalToLocal(mousePos.x, mousePos.y)], true));
+        this.body.collisionType = game.collisionTypes.LASER;
+        this.renderable = new (me.Renderable.extend({
+            init : function () {
+                this._super(me.Renderable, "init", [0, 0, -6, -300]);
+            },
+            destroy : function () {},
+            draw : function (renderer) {
+                var color = renderer.getColor();
+                renderer.setColor('#5E007E');
+                renderer.fillRect(0, 0, -this.width, -300);
+                renderer.setColor(color);
+            }
+        }));
+
+        // TODO: Calculate the correct length of the laser to the edge of the viewport.
+        this.body.addShape(new me.Rect(0, 0, 6, me.game.viewport.width * 1.5).rotate(angle - Math.PI / 2), false);
         this.body.shapes.shift();
-        //this.renderable.currentTransform.identity().rotate(angle + Number.prototype.degToRad(90));
-        //this.renderable.scale(0.75, 0.75);
-        //this.velx = Math.cos(angle) * 1000;
-        //this.vely = Math.sin(angle) * 1000;
-        this.maxX = me.game.viewport.width;
-        this.maxY = me.game.viewport.height;
-        //this.renderable.addAnimation("pulse",  [0, 1, 2, 3, 4, 5], 30);
-        //this.renderable.setCurrentAnimation("pulse");
-        //this.body.setVelocity(this.velx, this.vely);
+        this.renderable.currentTransform.identity().translate(x, y);
+        this.renderable.currentTransform.rotate(angle);
+
         this.alwaysUpdate = false;
-        this.damage = 2;
+        this.damage = 10;
     },
 
     update: function (time) {
