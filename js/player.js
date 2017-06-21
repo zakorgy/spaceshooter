@@ -65,7 +65,8 @@ game.Player = me.Entity.extend({
                 this.laser = null;
                 me.game.world.removeChild(laser);
             }
-            this.laser = me.game.world.addChild(me.pool.pull("laser", this.pos.x + 32  -3 * Math.sin(this.currentAngle), this.pos.y + 32 +3 * Math.cos(this.currentAngle), this.currentAngle));
+            //this.laser = me.game.world.addChild(me.pool.pull("laser", this.pos.x + 32  -3 * Math.sin(this.currentAngle), this.pos.y + 32 +3 * Math.cos(this.currentAngle), this.currentAngle));
+            this.laser = me.game.world.addChild(me.pool.pull("laser", this.pos.x, this.pos.y, this.currentAngle));
         } else {
             if (this.laser) {
                 var laser = this.laser;
