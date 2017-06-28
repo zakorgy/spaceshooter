@@ -7,8 +7,6 @@ game.Enemy = me.Entity.extend({
         });
         this._super(me.Entity, "init", [x, y, enemy_sprite]);
         this.z = 6;
-        this.body.addShape(new me.Ellipse(24, 24, 33, 33), true);
-        this.body.shapes.shift();
         this.body.collisionType = me.collision.types.ENEMY_OBJECT;
         this.renderable.scale(1.2, 1.2);
         this.renderable.addAnimation("idle", [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5], 332);
@@ -24,6 +22,7 @@ game.Enemy = me.Entity.extend({
         this.life = 10;
         this.angleModifier = (-150).random(150);
         this.damageOverTime = 0;
+        this.rotationAngle = 0;
     },
 
     update: function (time) {
@@ -70,6 +69,13 @@ game.Enemy = me.Entity.extend({
         this.pos.x += this.velx * time/1000;
         this.pos.y += this.vely * time/1000;
         this.renderable.currentTransform.rotate(Math.PI * time / 1000);
+
+        this.rotationAngle += Math.PI * time / 1000;
+        let transformMatrix = new me.Matrix2d().translate(16, 16).rotate(this.rotationAngle).translate(-16, -16);
+        var shape = new me.Rect(8, 8, 32, 32).toPolygon().transform(transformMatrix);
+        this.body.addShape(shape, true);
+        this.body.shapes.shift();
+
         this._super(me.Entity, "update", [time]);
         this.body.update();
         me.collision.check(this);
