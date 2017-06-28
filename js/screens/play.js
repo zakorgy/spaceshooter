@@ -12,8 +12,18 @@ game.PlayScreen = me.ScreenObject.extend({
         // position and scale to fit with the viewport size
         backgroundImage.anchorPoint.set(0, 0);
         backgroundImage.scale(me.game.viewport.width / backgroundImage.width, me.game.viewport.height / backgroundImage.height);
-        me.input.registerPointerEvent("pointerdown", backgroundImage, this.clicked.bind(this));
-        me.input.registerPointerEvent("pointerup", backgroundImage, this.release.bind(this));
+        me.input.registerPointerEvent("pointerdown", backgroundImage, function(e){
+            e = e || window.event;
+            var button = e.which || e.button;
+            isFiring = (button === 1);
+        });
+
+        me.input.registerPointerEvent("pointerup", backgroundImage, function(e){
+            e = e || window.event;
+            var button = e.which || e.button;
+            if (button === 1)
+                isFiring = false;
+        });
 
         me.game.world.addChild(backgroundImage, 1);
         var player = me.game.world.addChild(me.pool.pull("player"));
