@@ -1,6 +1,6 @@
 game.Player = me.Entity.extend({
     init : function (x, y) {
-        var image = me.loader.getImage("player_2");
+        var image = me.loader.getImage("player_3");
         this._super(me.Entity, "init", [
             me.game.viewport.width / 2 - image.width / 2,
             me.game.viewport.height / 2 - image.height - 20,
@@ -25,8 +25,8 @@ game.Player = me.Entity.extend({
     },
 
     update: function (time) {
-        var pos = me.input.globalToLocal(mousePos.x, mousePos.y);
-        var angle = this.angleToPoint(pos);
+       // var pos = me.input.globalToLocal(me.input.pointer.pos);
+        var angle = this.angleToPoint(me.input.pointer.pos);
         // FIXME: This is a lazy workaround for rotation.
         if (angle !== this.currentAngle) {
             this.renderable.currentTransform.identity().rotate(angle + Math.PI/ 2);
@@ -53,13 +53,13 @@ game.Player = me.Entity.extend({
 
         this.pos.x = this.pos.x.clamp(0, this.maxX);
         this.pos.y = this.pos.y.clamp(0, this.maxY);
-        /*if (isFiring && (Date.now() > this.lastTimeShot + 150)) {
+        if (isFiring && (Date.now() > this.lastTimeShot + 150)) {
             me.game.world.addChild(me.pool.pull("projectile", this.pos.x - 12 * Math.sin(this.currentAngle), this.pos.y + 12 * Math.cos(this.currentAngle), this.currentAngle));
             me.game.world.addChild(me.pool.pull("projectile", this.pos.x + 12 * Math.sin(this.currentAngle), this.pos.y - 12 * Math.cos(this.currentAngle), this.currentAngle));
             this.lastTimeShot = Date.now();
-        }*/
+        }
 
-        if (isFiring) {
+        /*if (isFiring) {
             if (this.laser) {
                 var laser = this.laser;
                 this.laser = null;
@@ -73,7 +73,7 @@ game.Player = me.Entity.extend({
                 this.laser = null;
                 me.game.world.removeChild(laser);
             }
-        }
+        }*/
 
         if (isFiring) {
             this.velx = 75;
