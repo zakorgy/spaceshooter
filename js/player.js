@@ -53,13 +53,13 @@ game.Player = me.Entity.extend({
 
         this.pos.x = this.pos.x.clamp(0, this.maxX);
         this.pos.y = this.pos.y.clamp(0, this.maxY);
-        if (isFiring && (Date.now() > this.lastTimeShot + 150)) {
+        /*if (isFiring && (Date.now() > this.lastTimeShot + 150)) {
             me.game.world.addChild(me.pool.pull("projectile", this.pos.x - 12 * Math.sin(this.currentAngle), this.pos.y + 12 * Math.cos(this.currentAngle), this.currentAngle));
             me.game.world.addChild(me.pool.pull("projectile", this.pos.x + 12 * Math.sin(this.currentAngle), this.pos.y - 12 * Math.cos(this.currentAngle), this.currentAngle));
             this.lastTimeShot = Date.now();
-        }
+        }*/
 
-        /*if (isFiring) {
+        if (isFiring) {
             if (this.laser) {
                 var laser = this.laser;
                 this.laser = null;
@@ -73,7 +73,7 @@ game.Player = me.Entity.extend({
                 this.laser = null;
                 me.game.world.removeChild(laser);
             }
-        }*/
+        }
 
         if (isFiring) {
             this.velx = 75;
