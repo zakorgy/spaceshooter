@@ -27,6 +27,7 @@ game.Enemy = me.Entity.extend({
 
     update: function (time) {
         this.life -= this.damageOverTime * time/1000;
+        this.damageOverTime = 0;
         if (this.life <= 0) {
             me.game.world.removeChild(this);
         }
@@ -84,27 +85,18 @@ game.Enemy = me.Entity.extend({
 
     onCollision : function (res, other) {
         if (other.body.collisionType === game.collisionTypes.LASER) {
-            console.log("LASER hit")
             this.damageOverTime = other.damage;
-            return false;
-        } else {
-            this.damageOverTime = 0;
         }
+
         if (other.body.collisionType === me.collision.types.PROJECTILE_OBJECT) {
             this.life -= other.damage;
             me.game.world.removeChild(other);
-            return false;
         }
         if (res.b.body.collisionType === me.collision.types.PLAYER_OBJECT && res.bInA) {
-            // makes the other entity solid, by substracting the overlap vector to the current position
             this.isTargetReached = true;
             this.angleModifier = 0;
-            //this.pos.sub(res.overlapV);
-            // not solid
-            return false;
         }
         if (res.b.body.collisionType === me.collision.types.ENEMY_OBJECT) {
-            // makes the other entity solid, by substracting the overlap vector to the current position
             if ((res.b.distanceTo(this.target) <= this.distanceTo(this.target))) {
                 this.lastCollidedEnemy = other;
                 this.pos.add(res.overlapV.div(40));
@@ -112,8 +104,6 @@ game.Enemy = me.Entity.extend({
             if (other.isTargetReached) {
                 this.lastCollidedEnemy = null;
             }
-            // not solid
-            return false;
         }
         return false;
     },

@@ -1,75 +1,63 @@
 game.Laser = me.Entity.extend({
     init : function (x, y, angle) {
         var laser = new me.Sprite(0, 0, {
-            image : "laser",
-            framewidth : 100,
-            frameheight : 6
+            image : "laser_sprite",
+            framewidth : 1536,
+            frameheight : 8
         });
-        //laser._super(me.Renderable, "transform", [new me.Matrix2d().identity().scale(0.1, 0.1)]);
         this._super(me.Entity, "init", [x, y, laser]);
-        this.z = 5;
+        this.z = 1;
         this.body.collisionType = game.collisionTypes.LASER;
+        this.renderable.addAnimation("flow", [0, 1, 2, 3, 4, 5, 6, 7], 60);
+        this.renderable.setCurrentAnimation("flow");
+        this.angle = angle;
 
         // TODO: Calculate the correct length of the laser to the edge of the viewport.
-        this.body.addShape(new me.Rect(32  - 3 * Math.sin(angle), 32 + 3 * Math.cos(angle), 6, 100).rotate(angle - Math.PI / 2), false);
+        this.body.addShape(new me.Rect(32  - 3 * Math.sin(angle), 32 + 3 * Math.cos(angle), 6, 1536).rotate(angle - Math.PI / 2), false);
         this.body.shapes.shift();
-
-        //this.renderable._bounds.setShape(x, y, 1, 1);
-        //this.renderable.currentTransform.translate(-32 - 3 * Math.sin(angle), 24 + 3 * Math.cos(angle));
-        var laserBounds = this.getBounds();
-        if (angle > 0 && angle <= Math.PI/2)
-        {
-            this.renderable.anchorPoint.set(0.0,0.5);
-            this.anchorPoint.set(32 / laserBounds.width , 32 / laserBounds.height);
-            console.log("1");    
-        }
-        if (angle > Math.PI/2 && angle <= Math.PI)
-        {
-            this.renderable.anchorPoint.set(0.0,0.5);
-            this.anchorPoint.set(32 / laserBounds.width , -32 / laserBounds.height);
-            console.log("2");
-        }
-        if (angle > -Math.PI && angle <= -Math.PI/2)
-        {
-            //this.anchorPoint.set(0.0, 0.0);
-            //this.renderable.anchorPoint.set(0,0);
-            //this.renderable.currentTransform.translate(-Math.cos(angle) * 324, -Math.sin(angle) * 324);
-            //console.log("3");
-            this.anchorPoint.set(0.0, 0.0);
-            this.renderable.anchorPoint.set(0,0);
-            this.renderable.currentTransform.translate(Math.cos(angle) * 200, Math.sin(angle) * 300);
-            console.log("3");
-        }
-        if (angle > -Math.PI/2 && angle <= 0)
-        {
-            this.renderable.anchorPoint.set(0.0,0.5);
-            this.anchorPoint.set(32 / laserBounds.width , 1);
-            console.log("4");
-        }
-
-        console.log("bottom: " + laserBounds.bottom +
-                    " top: " + laserBounds.top +
-                    " left: " + laserBounds.left +
-                    " right: " + laserBounds.right +
-                    " width: " + laserBounds.width +
-                    " height: " + laserBounds.height);
-        this.renderable.currentTransform.rotate(angle);     
-        this.alwaysUpdate = false;
-        this.damage = 10;
+        this.renderable.currentTransform.rotate(angle); 
+        this.alwaysUpdate = true;
+        this.damage = 20;
     },
 
     update: function (time) {
+        this.body.addShape(new me.Rect(32  - 3 * Math.sin(this.angle), 32 + 3 * Math.cos(this.angle), 6, 1536).rotate(this.angle - Math.PI / 2), false);
+        this.body.shapes.shift();
+
+        var laserBounds = this.getBounds();
+        var needsCalc = false;
+        if (this.angle > 0 && this.angle <= Math.PI/2)
+        {
+            this.anchorPoint.set(3 * Math.sin(this.angle) / laserBounds.width, 3 * Math.cos(this.angle) / laserBounds.height);
+            needsCalc = true;
+        }
+
+        if (this.angle > Math.PI/2 && this.angle <= Math.PI && !needsCalc)
+        {
+            this.anchorPoint.set((laserBounds.width - 3 * Math.sin(this.angle)) / laserBounds.width, -3 * Math.cos(this.angle) / laserBounds.height);
+            needsCalc = true;
+        }
+
+        if (this.angle >= -Math.PI && this.angle < -Math.PI/2 && !needsCalc)
+        {
+            this.anchorPoint.set((laserBounds.width + 3 * Math.sin(this.angle)) / laserBounds.width, (laserBounds.height + 3 * Math.cos(this.angle)) / laserBounds.height);
+            needsCalc = true;
+        }
+
+        if (this.angle >= -Math.PI/2 && this.angle < 0 && !needsCalc)
+        {
+            this.anchorPoint.set(-3 * Math.sin(this.angle) / laserBounds.width, (laserBounds.height -3 * Math.cos(this.angle)) / laserBounds.height);
+        }
+        
+        this.renderable.anchorPoint.set(0, 0.5);
+        this.renderable.currentTransform.identity().rotate(this.angle);
         this._super(me.Entity, "update", [time]);
-        //this.pos.x += this.velx * time/1000;
-        //this.pos.y += this.vely * time/1000;
-        //this.body.vel.x += this.body.accel.x * time / 1000;
-        //this.body.vel.y += this.body.accel.y * time / 1000;
-
-        //this.pos.x = this.pos.x.clamp(0, this.maxX);
-        //this.pos.y = this.pos.y.clamp(0, this.maxY);
-
-        //this.body.update();
         me.collision.check(this);
         return true;
+    },
+
+    updateAngleAndPos: function (angle, pos) {
+        this.angle = angle;
+        this.pos = pos;
     }
 });

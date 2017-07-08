@@ -28,7 +28,7 @@ game.PlayScreen = me.ScreenObject.extend({
         me.game.world.addChild(backgroundImage, 1);
         var player = me.game.world.addChild(me.pool.pull("player"));
         // This is only for test purposes, this should be placed in a different place.
-        //me.game.world.addChild(me.pool.pull("enemy", (100).random(800), (100).random(800), player));
+        me.game.world.addChild(me.pool.pull("enemy", (100).random(800), (100).random(800), player));
         maxEnemyCount  = 1;
 
         me.input.bindKey(me.input.KEY.LEFT, "left");
